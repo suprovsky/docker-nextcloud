@@ -1,4 +1,4 @@
-FROM wonderfall/nginx-php:7.2
+FROM wonderfall/nginx-php:7.3
 
 ARG NEXTCLOUD_VERSION=18.0.1
 ARG GPG_nextcloud="2880 6A87 8AE4 23A2 8372  792E D758 99B9 A724 937A"
@@ -24,17 +24,21 @@ RUN apk -U upgrade \
     pcre-dev \
     libtool \
     samba-dev \
+    imagemagick-dev \
  && apk add \
     libressl \
     ca-certificates \
     libsmbclient \
     tzdata \
+    imagemagick \
  && pecl install \
     smbclient \
     apcu \
     redis \
+    imagick \
  && echo "extension=smbclient.so" > /php/conf.d/smbclient.ini \
  && echo "extension=redis.so" > /php/conf.d/redis.ini \
+ && echo "extension=imagick.so" > /php/conf.d/imagick.ini \
  && mkdir /nextcloud \
  && cd /tmp \
  && NEXTCLOUD_TARBALL="nextcloud-${NEXTCLOUD_VERSION}.tar.bz2" \
