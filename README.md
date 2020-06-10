@@ -3,7 +3,7 @@
 
 [![](https://images.microbadger.com/badges/version/suprovsky/nextcloud.svg)](http://microbadger.com/images/suprovsky/nextcloud "Get your own version badge on microbadger.com") [![](https://images.microbadger.com/badges/image/suprovsky/nextcloud.svg)](http://microbadger.com/images/suprovsky/nextcloud "Get your own image badge on microbadger.com")
 
-**This image is a fork from wonderfall/nextcloud. It is made by updating purposes only since wonderfall is not maintaining his repo anymore.**
+**This image is a fork from wonderfall/nextcloud. It was made by updating purposes only since wonderfall was not maintaining his repo for a long time but since he's taking care of it now, there's no need to keep these images updated. Please move back on wonderfall/nextcloud images since they're up-to-date.**
 
 ### Features
 - Based on Alpine Linux.
