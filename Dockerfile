@@ -21,6 +21,7 @@ ARG GPG_FINGERPRINT="2880 6A87 8AE4 23A2 8372  792E D758 99B9 A724 937A"
 FROM php:${PHP_VERSION}-fpm-alpine${ALPINE_VERSION} as base
 
 ARG SNUFFLEUPAGUS_VERSION
+ADD https://github.com/mlocati/docker-php-extension-installer/releases/latest/download/install-php-extensions /usr/local/bin/
 
 RUN apk -U upgrade \
  && apk add -t build-deps \
@@ -36,7 +37,6 @@ RUN apk -U upgrade \
         openldap-dev \
         postgresql-dev \
         zlib-dev \
-        imagemagick-dev \
         libtool \
  && apk --no-cache add \
         freetype \
@@ -50,7 +50,8 @@ RUN apk -U upgrade \
         openldap \
         zlib \
         libssl3 \
-        libcrypto3 \ 
+        libcrypto3 \
+        imagemagick-dev \
         imagemagick \
  && docker-php-ext-configure gd --with-freetype --with-jpeg --with-webp \
  && docker-php-ext-configure ldap \
@@ -68,8 +69,10 @@ RUN apk -U upgrade \
         gmp \
  && pecl install APCu \
  && pecl install redis \
- && pecl install imagick \
+ && CFLAGS="$PHP_CFLAGS" CPPFLAGS="$PHP_CPPFLAGS" LDFLAGS="$PHP_LDFLAGS" pecl install imagick \
  && docker-php-ext-enable imagick \
+ && chmod +x /usr/local/bin/install-php-extensions \
+ && install-php-extensions sysvsem \
  && echo "extension=redis.so" > /usr/local/etc/php/conf.d/redis.ini \
  && cd /tmp && git clone --depth 1 --branch v${SNUFFLEUPAGUS_VERSION} https://github.com/jvoisin/snuffleupagus \
  && cd snuffleupagus/src && phpize && ./configure --enable-snuffleupagus && make && make install \
