@@ -14,7 +14,7 @@ on:
 
 env:
   REGISTRY: ghcr.io
-  IMAGE_NAME: wonderfall/nextcloud
+  IMAGE_NAME: suprovsky/nextcloud
 
 jobs:
   build:

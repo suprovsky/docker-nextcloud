@@ -1,5 +1,5 @@
 # -------------- Build-time variables --------------
-ARG NEXTCLOUD_VERSION=25.0.5
+ARG NEXTCLOUD_VERSION=26.0.0
 ARG PHP_VERSION=8.1
 ARG NGINX_VERSION=1.22
 
@@ -10,8 +10,8 @@ ARG SNUFFLEUPAGUS_VERSION=0.8.3
 ARG UID=1000
 ARG GID=1000
 
-# nextcloud-25.0.5.tar.bz2
-ARG SHA256_SUM="c6dc632d83c62bd5741af5335dc13b6b0cde61064d3cd9a51ee0e6b4778ca9a5"
+# nextcloud-26.0.0.tar.bz2
+ARG SHA256_SUM="f163150363aee9366ecb5cd5259bf6756ed4f073cea78b5fa515cada7a0d0c3d"
 
 # Nextcloud Security <security@nextcloud.com> (D75899B9A724937A)
 ARG GPG_FINGERPRINT="2880 6A87 8AE4 23A2 8372  792E D758 99B9 A724 937A"
@@ -36,6 +36,8 @@ RUN apk -U upgrade \
         openldap-dev \
         postgresql-dev \
         zlib-dev \
+        imagemagick-dev \
+        libtool \
  && apk --no-cache add \
         freetype \
         gmp \
@@ -63,8 +65,11 @@ RUN apk -U upgrade \
         pdo_pgsql \
         zip \
         gmp \
+        imagemagick \
  && pecl install APCu \
  && pecl install redis \
+ && pecl install imagick \
+ && docker-php-ext-enable imagick \
  && echo "extension=redis.so" > /usr/local/etc/php/conf.d/redis.ini \
  && cd /tmp && git clone --depth 1 --branch v${SNUFFLEUPAGUS_VERSION} https://github.com/jvoisin/snuffleupagus \
  && cd snuffleupagus/src && phpize && ./configure --enable-snuffleupagus && make && make install \
@@ -150,9 +155,9 @@ VOLUME /data /nextcloud/config /nextcloud/apps2 /nextcloud/themes
 
 EXPOSE 8888
 
-LABEL org.opencontainers.image.description="All-in-one Nextcloud image, based on Alpine Linux" \
+LABEL org.opencontainers.image.description="All-in-one Nextcloud image, based on Alpine Linux, based on wonderfall/nextcloud" \
       org.opencontainers.image.version="${NEXTCLOUD_VERSION}" \
-      org.opencontainers.image.authors="Wonderfall <wonderfall@protonmail.com>" \
-      org.opencontainers.image.source="https://github.com/Wonderfall/docker-nextcloud"
+      org.opencontainers.image.authors="Radosław Serba <radoslaw@serba.ovh>" \
+      org.opencontainers.image.source="https://github.com/suprovsky/docker-nextcloud"
 
 CMD ["run.sh"]
