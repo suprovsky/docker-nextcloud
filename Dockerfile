@@ -51,6 +51,7 @@ RUN apk -U upgrade \
         zlib \
         libssl3 \
         libcrypto3 \ 
+        imagemagick \
  && docker-php-ext-configure gd --with-freetype --with-jpeg --with-webp \
  && docker-php-ext-configure ldap \
  && docker-php-ext-install -j "$(nproc)" \
@@ -65,7 +66,6 @@ RUN apk -U upgrade \
         pdo_pgsql \
         zip \
         gmp \
-        imagemagick \
  && pecl install APCu \
  && pecl install redis \
  && pecl install imagick \
