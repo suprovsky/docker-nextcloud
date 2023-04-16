@@ -69,9 +69,9 @@ RUN apk -U upgrade \
         gmp \
  && pecl install APCu \
  && pecl install redis \
- && install-php-extensions sysvsem imagick \
  && docker-php-ext-enable imagick \
  && chmod +x /usr/local/bin/install-php-extensions \
+ && install-php-extensions sysvsem imagick \
  && echo "extension=redis.so" > /usr/local/etc/php/conf.d/redis.ini \
  && cd /tmp && git clone --depth 1 --branch v${SNUFFLEUPAGUS_VERSION} https://github.com/jvoisin/snuffleupagus \
  && cd snuffleupagus/src && phpize && ./configure --enable-snuffleupagus && make && make install \
