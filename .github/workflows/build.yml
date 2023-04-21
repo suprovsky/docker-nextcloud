@@ -14,7 +14,7 @@ on:
 
 env:
   REGISTRY: ghcr.io
-  IMAGE_NAME: suprovsky/nextcloud
+  IMAGE_NAME: suprovsky/docker-nextcloud
 
 jobs:
   build:
