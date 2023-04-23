@@ -6,23 +6,24 @@ As of now, only the latest stable version is supported.
 
 | Version | Supported          |
 | ------- | ------------------ |
-| 24. x   | :white_check_mark: |
-| 23. x   | :x:                |
-| 22. x   | :x:                |
+| 26. x   | :white_check_mark: |
+| 25. x   | :x:                |
+| 24. x   | :x:                |
 
 Please update to the latest version available. Major migrations are always tested before being pushed.
 
 ## Automated vulnerability scanning
 
-Uploaded images are regularly scanned for [OS vulnerabilities](https://github.com/Wonderfall/docker-nextcloud/security/code-scanning).
+Uploaded images are regularly scanned for [OS vulnerabilities](https://github.com/suprovsky/docker-nextcloud/security/code-scanning).
 
 ## Reporting a vulnerability
 
 *Upstream* vulnerabilities should be reported to *upstream* projects according to their own security policies.
 
 Regarding vulnerabilities specific to this project:
+
 - Faulty configuration files
 - Unsafe defaults
 - Dependencies security updates
 
-Those can be disclosed in private to `wonderfall@pm.me` or `wonderfall:targaryen.house` on Matrix (preferred).
+Those can be disclosed in private to `radoslaw@serba.ovh`.

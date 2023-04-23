@@ -1,26 +1,26 @@
-# wonderfall/nextcloud
+# suprovsky/nextcloud
 
 <p align="center"><a href="https://unsplash.com/photos/9JrBiphz0e0" target="_blank"><img height="128" src="https://raw.githubusercontent.com/wonderfall/docker-nextcloud/main/.github/docker-nextcloud.jpg"></a></p>
 <p align="center"><i>The self-hosted productivity platform that keeps you in control.</i></p>
 
 ## About
-This non-official image is intended as an **all-in-one** (as in monolithic) Nextcloud **production** image. If you're not sure you want this image, you should probably use [the official image](https://hub.docker.com/r/nextcloud). The main goal is to provide an easy-to-use image with decent security standards.
 
-Check out Nextcloud [official website](https://nextcloud.com/) and [source code](https://github.com/nextcloud).
-
+This non-official image is intended as an **all-in-one** (as in monolithic) Nextcloud **production** image based on [wonderfall/docker-nextcloud](https://github.com/wonderfall/docker-nextcloud) with an inclusion of imagick plugin.
 ___
 
-* [Features](#features)
-* [Security](#security)
-* [Tags](#tags)
-* [Build-time variables](#build-time-variables)
-* [Environment variables](#environment-variables)
-  * [Runtime](#runtime)
-  * [Startup](#startup)
-* [Volumes](#volumes)
-* [Ports](#ports)
-* [Migration](#migration)
-* [Usage](#usage)
+- [suprovsky/nextcloud](#suprovskynextcloud)
+  - [About](#about)
+  - [Features](#features)
+  - [Security](#security)
+  - [Tags](#tags)
+  - [Build-time variables](#build-time-variables)
+  - [Environment variables](#environment-variables)
+    - [Runtime](#runtime)
+    - [Startup](#startup)
+  - [Volumes](#volumes)
+  - [Ports](#ports)
+  - [Migration](#migration)
+  - [Usage](#usage)
 
 ## Features
 
@@ -43,13 +43,13 @@ You're free to make your own image based on this one if you want a specific feat
 
 Don't run random images from random dudes on the Internet. Ideally, you want to maintain and build it yourself.
 
-- **Images are scanned every day** by [Trivy](https://github.com/aquasecurity/trivy) for OS vulnerabilities. Known vulnerabilities will be automatically uploaded to [GitHub Security Lab](https://github.com/Wonderfall/docker-nextcloud/security/code-scanning) for full transparency. This also warns me if I have to take action to fix a vulnerability. 
+- **Images are scanned every day** by [Trivy](https://github.com/aquasecurity/trivy) for OS vulnerabilities. Known vulnerabilities will be automatically uploaded to [GitHub Security Lab](https://github.com/Wonderfall/docker-nextcloud/security/code-scanning) for full transparency. This also warns me if I have to take action to fix a vulnerability.
 - **Latest tag/version is automatically built weekly**, so you should often update your images regardless if you're already using the latest Nextcloud version.
 - **Build production images without cache** (use `docker build --no-cache` for instance) if you want to build your images manually. Latest dependencies will hence be used instead of outdated ones due to a cached layer.
 - **A security module for PHP called [Snuffleupagus](https://github.com/jvoisin/snuffleupagus) is used by default**. This module aims at killing entire bug and security exploit classes (including XXE, weak PRNG, file-upload based code execution), thus raising the cost of attacks. For now we're using a configuration file derived from [the default one](https://github.com/jvoisin/snuffleupagus/blob/master/config/default_php8.rules), with some explicit exceptions related to Nextcloud. This configuration file is tested and shouldn't break basic functionality, but it can cause issues in specific and untested use cases: if that happens to you, get logs from either `syslog` or `/nginx/logs/error.log` inside the container, and [open an issue](https://github.com/Wonderfall/docker-nextcloud/issues). You can also disable the security module altogether by changing the `PHP_HARDENING` environment variable to `false` before recreating the container.
 - **Images are signed with the GitHub-provided OIDC token in Actions** using the experimental "keyless" signing feature provided by [cosign](https://github.com/sigstore/cosign). You can verify the image signature using `cosign` as well:
 
-```
+```env
 COSIGN_EXPERIMENTAL=true cosign verify ghcr.io/wonderfall/nextcloud
 ```
 
@@ -83,9 +83,9 @@ Only the **latest stable version** will be maintained by myself.
 | **CONFIG_NATIVE**           | native code for hardened_malloc        |        false       |
 | **VARIANT**                 | variant of hardened_malloc (see repo)  |        light       |
 
-*\* latest known available, likely to change regularly*
+(latest known available, likely to change regularly)
 
-For convenience they were put at [the very top of the Dockerfile](https://github.com/Wonderfall/docker-nextcloud/blob/main/Dockerfile#L1-L13) and their usage should be quite explicit if you intend to build this image yourself. If you intend to change `NEXTCLOUD_VERSION`, change `SHA256_SUM` accordingly.
+For convenience they were put at [the very top of the Dockerfile](https://github.com/suprovsky/docker-nextcloud/blob/main/Dockerfile#L1-L13) and their usage should be quite explicit if you intend to build this image yourself. If you intend to change `NEXTCLOUD_VERSION`, change `SHA256_SUM` accordingly.
 
 ## Environment variables
 
@@ -107,7 +107,7 @@ Leave them at default if you're not sure what you're doing.
 
 ### Startup
 
-|          Variable         |         Description         | 
+|          Variable         |         Description         |
 | ------------------------- | --------------------------- |
 |        **ADMIN_USER**     | admin username              |
 |      **ADMIN_PASSWORD**   | admin password              |
@@ -140,6 +140,7 @@ The usage of [Docker secrets](https://docs.docker.com/engine/swarm/secrets/) wil
 | **8888** (tcp)               |       Nextcloud web        |
 
 A reverse proxy like [Traefik](https://doc.traefik.io/traefik/) or [Caddy](https://caddyserver.com/) can be used, and you should consider:
+
 - Redirecting all HTTP traffic to HTTPS
 - Setting the [HSTS header](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Strict-Transport-Security) correctly
 
@@ -148,6 +149,7 @@ A reverse proxy like [Traefik](https://doc.traefik.io/traefik/) or [Caddy](https
 From now on you'll need to make sure all volumes have proper permissions. The default UID/GID is now 1000, so you'll need to build the image yourself if you want to change that, or you can just change the actual permissions of the volumes using `chown -R 1000:1000`. The flexibility provided by the legacy image came at some cost (performance & security), therefore this feature won't be provided anymore.
 
 Other changes that should be reflected in your configuration files:
+
 - `/config` volume is now `/nextcloud/config`
 - `/apps2` volume is now `/nextcloud/apps2`
 - `ghcr.io/wonderfall/nextcloud` is the new image location
