@@ -160,6 +160,6 @@ EXPOSE 8888
 LABEL org.opencontainers.image.description="All-in-one Nextcloud image, based on Alpine Linux, based on wonderfall/nextcloud" \
       org.opencontainers.image.version="${NEXTCLOUD_VERSION}" \
       org.opencontainers.image.authors="Radosław Serba <radoslaw@serba.ovh>" \
-      org.opencontainers.image.source="https://github.com/suprovsky/nextcloud"
+      org.opencontainers.image.source="https://github.com/suprovsky/docker-nextcloud"
 
 CMD ["run.sh"]
