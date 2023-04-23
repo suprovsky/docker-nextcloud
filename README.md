@@ -43,14 +43,14 @@ You're free to make your own image based on this one if you want a specific feat
 
 Don't run random images from random dudes on the Internet. Ideally, you want to maintain and build it yourself.
 
-- **Images are scanned every day** by [Trivy](https://github.com/aquasecurity/trivy) for OS vulnerabilities. Known vulnerabilities will be automatically uploaded to [GitHub Security Lab](https://github.com/Wonderfall/docker-nextcloud/security/code-scanning) for full transparency. This also warns me if I have to take action to fix a vulnerability.
+- **Images are scanned every day** by [Trivy](https://github.com/aquasecurity/trivy) for OS vulnerabilities. Known vulnerabilities will be automatically uploaded to [GitHub Security Lab](https://github.com/suprovsky/docker-nextcloud/security/code-scanning) for full transparency. This also warns me if I have to take action to fix a vulnerability.
 - **Latest tag/version is automatically built weekly**, so you should often update your images regardless if you're already using the latest Nextcloud version.
 - **Build production images without cache** (use `docker build --no-cache` for instance) if you want to build your images manually. Latest dependencies will hence be used instead of outdated ones due to a cached layer.
-- **A security module for PHP called [Snuffleupagus](https://github.com/jvoisin/snuffleupagus) is used by default**. This module aims at killing entire bug and security exploit classes (including XXE, weak PRNG, file-upload based code execution), thus raising the cost of attacks. For now we're using a configuration file derived from [the default one](https://github.com/jvoisin/snuffleupagus/blob/master/config/default_php8.rules), with some explicit exceptions related to Nextcloud. This configuration file is tested and shouldn't break basic functionality, but it can cause issues in specific and untested use cases: if that happens to you, get logs from either `syslog` or `/nginx/logs/error.log` inside the container, and [open an issue](https://github.com/Wonderfall/docker-nextcloud/issues). You can also disable the security module altogether by changing the `PHP_HARDENING` environment variable to `false` before recreating the container.
+- **A security module for PHP called [Snuffleupagus](https://github.com/jvoisin/snuffleupagus) is used by default**. This module aims at killing entire bug and security exploit classes (including XXE, weak PRNG, file-upload based code execution), thus raising the cost of attacks. For now we're using a configuration file derived from [the default one](https://github.com/jvoisin/snuffleupagus/blob/master/config/default_php8.rules), with some explicit exceptions related to Nextcloud. This configuration file is tested and shouldn't break basic functionality, but it can cause issues in specific and untested use cases: if that happens to you, get logs from either `syslog` or `/nginx/logs/error.log` inside the container, and [open an issue](https://github.com/suprovsky/docker-nextcloud/issues). You can also disable the security module altogether by changing the `PHP_HARDENING` environment variable to `false` before recreating the container.
 - **Images are signed with the GitHub-provided OIDC token in Actions** using the experimental "keyless" signing feature provided by [cosign](https://github.com/sigstore/cosign). You can verify the image signature using `cosign` as well:
 
 ```env
-COSIGN_EXPERIMENTAL=true cosign verify ghcr.io/wonderfall/nextcloud
+COSIGN_EXPERIMENTAL=true cosign verify ghcr.io/suprovsky/nextcloud
 ```
 
 Verifying the signature isn't a requirement, and might not be as seamless as using *Docker Content Trust* (which is not supported by GitHub's OCI registry). However, it's strongly recommended to do so in a sensitive environment to ensure the authenticity of the images and further limit the risk of supply chain attacks.
@@ -61,7 +61,7 @@ Verifying the signature isn't a requirement, and might not be as seamless as usi
 - `x` : latest Nextcloud x.x (e.g. `24`)
 - `x.x.x` : Nextcloud x.x.x (e.g. `24.0.0`)
 
-You can always have a glance [here](https://github.com/users/Wonderfall/packages/container/package/nextcloud).
+You can always have a glance [here](https://github.com/users/suprovsky/packages/container/package/nextcloud).
 Only the **latest stable version** will be maintained by myself.
 
 *Note: automated builds only target `linux/amd64` (x86_64). There is no technical reason preventing the image to be built for `arm64` (in fact you can build it yourself), but GitHub Actions runners are limited in memory, and this limit makes it currently impossible to target both platforms.*
