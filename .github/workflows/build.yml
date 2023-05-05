@@ -75,14 +75,3 @@ jobs:
         env:
           COSIGN_EXPERIMENTAL: "true"
         run: cosign sign ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}@${{ steps.build-and-push.outputs.digest }}
-
-      - name: Build and push Docker image with UID/GID 33
-        id: build-and-push-33
-        uses: docker/build-push-action@v4
-        with:
-          context: .
-          push: ${{ github.event_name != 'pull_request' }}
-          tags: |
-            latest-33
-          labels: ${{ steps.meta.outputs.labels }}
-          file: './Dockerfile.33'
