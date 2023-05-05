@@ -142,14 +142,13 @@ RUN apk --no-cache add \
  && echo "All seems good, now unpacking ${NEXTCLOUD_TARBALL}..." \
  && mkdir /nextcloud && tar xjf ${NEXTCLOUD_TARBALL} --strip 1 -C /nextcloud \
  && apk del gnupg && rm -rf /tmp/* /root/.gnupg \
- && adduser -g ${GID} -u ${UID} --disabled-password --gecos "" nextcloud \
- && chown -R nextcloud:nextcloud /nextcloud/config
+ && chown -R ${GID}:{UID} /nextcloud/config
 
-COPY --chown=nextcloud:nextcloud rootfs /
+COPY --chown=${GID}:{UID} rootfs /
 
 RUN chmod +x /usr/local/bin/* /etc/s6.d/*/* /etc/s6.d/.s6-svscan/*
 
-USER nextcloud
+USER 33
 
 WORKDIR /nextcloud
 
