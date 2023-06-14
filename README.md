@@ -260,16 +260,16 @@ With this setup I got 120/100 on [Mozilla Observatory](https://observatory.mozil
 
 ```nginx
 server {
-    listen [::]:443 ssl; # managed by Certbot
-    listen 443 ssl; # managed by Certbot
-    ssl_certificate /etc/letsencrypt/live/nextcloud.example.com/fullchain.pem; # managed by Certbot
-    ssl_certificate_key /etc/letsencrypt/live/nextcloud.example.com/privkey.pem; # managed by Certbot
-    ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem; # managed by Certbot
-    server_name nextcloud.example.com;
-    access_log /var/log/nginx/nextcloud.example.com-access.log;
-    error_log /var/log/nginx/nextcloud.example.com-error.log;
-    ssl_session_cache shared:ssl_session_cache:10m;
-    location / {
+  listen [::]:443 ssl; # managed by Certbot
+  listen 443 ssl; # managed by Certbot
+  ssl_certificate /etc/letsencrypt/live/nextcloud.example.com/fullchain.pem; # managed by Certbot
+  ssl_certificate_key /etc/letsencrypt/live/nextcloud.example.com/privkey.pem; # managed by Certbot
+  ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem; # managed by Certbot
+  server_name nextcloud.example.com;
+  access_log /var/log/nginx/nextcloud.example.com-access.log;
+  error_log /var/log/nginx/nextcloud.example.com-error.log;
+  ssl_session_cache shared:ssl_session_cache:10m;
+  location / {
     proxy_pass http://127.0.0.1:8888$request_uri;
     proxy_hide_header X-Content-Type-Options;
     proxy_hide_header X-XSS-Protection;
@@ -292,16 +292,13 @@ server {
     proxy_http_version 1.1;
     proxy_set_header Upgrade $http_upgrade;
     proxy_set_header Connection "upgrade";
-    }
-
-    location /.well-known/carddav {
-            return 301 $scheme://$host/remote.php/dav;
-    }
-
-    location /.well-known/caldav {
-            return 301 $scheme://$host/remote.php/dav;
-    }
-
+  }
+  location /.well-known/carddav {
+    return 301 $scheme://$host/remote.php/dav;
+  }
+  location /.well-known/caldav {
+    return 301 $scheme://$host/remote.php/dav;
+  }
 }
 server {
     listen 80;
