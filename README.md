@@ -254,3 +254,59 @@ MARIADB_ROOT_PASSWORD=DXDXDXDXDXDXDXDXDXDXDXDXDXDXDXDXD
 PHP_HARDENING=true
 REDIS_PASSWORD=XDXDXDXDXDXDXDXDXDXDXDXDXDXDXDXD
 ```
+
+You must use some reverse proxy in front of the container. I like [Nginx](https://www.nginx.com/), so you can find an example config making use of [Let's Encrypt](https://letsencrypt.org/) certificates below.  
+With this setup I got 120/100 on [Mozilla Observatory](https://observatory.mozilla.org/), A+ on [Nextcloud Security Scan](https://scan.nextcloud.com/) and A+ on [SSL Labs](https://www.ssllabs.com/).
+
+```nginx
+server {
+    listen [::]:443 ssl; # managed by Certbot
+    listen 443 ssl; # managed by Certbot
+    ssl_certificate /etc/letsencrypt/live/nextcloud.example.com/fullchain.pem; # managed by Certbot
+    ssl_certificate_key /etc/letsencrypt/live/nextcloud.example.com/privkey.pem; # managed by Certbot
+    ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem; # managed by Certbot
+    server_name nextcloud.example.com;
+    access_log /var/log/nginx/nextcloud.example.com-access.log;
+    error_log /var/log/nginx/nextcloud.example.com-error.log;
+    ssl_session_cache shared:ssl_session_cache:10m;
+    location / {
+    proxy_pass http://127.0.0.1:8888$request_uri;
+    proxy_hide_header X-Content-Type-Options;
+    proxy_hide_header X-XSS-Protection;
+    proxy_hide_header X-Robots-Tag;
+    add_header X-Content-Type-Options "nosniff" always;
+    add_header X-Robots-Tag "noindex, nofollow" always;
+    add_header X-XSS-Protection "1; mode=block" always;
+    add_header Strict-Transport-Security "max-age=31536000; includeSubDomains; preload";
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Port $server_port;
+    proxy_set_header X-Forwarded-Scheme $scheme;
+    proxy_set_header X-Forwarded-Proto $scheme;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header Accept-Encoding "";
+    proxy_set_header Host $host;
+    proxy_buffering off;
+    client_body_buffer_size 512k;
+    proxy_read_timeout 86400s;
+    client_max_body_size 0;
+    proxy_http_version 1.1;
+    proxy_set_header Upgrade $http_upgrade;
+    proxy_set_header Connection "upgrade";
+    }
+
+    location /.well-known/carddav {
+            return 301 $scheme://$host/remote.php/dav;
+    }
+
+    location /.well-known/caldav {
+            return 301 $scheme://$host/remote.php/dav;
+    }
+
+}
+server {
+    listen 80;
+    listen [::]:80;
+    server_name nextcloud.example.com;
+    return 302 https://nextcloud.example.com$request_uri;
+}
+```
