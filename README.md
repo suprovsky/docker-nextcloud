@@ -55,8 +55,8 @@ Verifying the signature isn't a requirement, and might not be as seamless as usi
 ## Tags
 
 - `latest` : latest Nextcloud version
-- `x` : latest Nextcloud x.x (e.g. `24`)
-- `x.x.x` : Nextcloud x.x.x (e.g. `24.0.0`)
+- `x` : latest Nextcloud x.x (e.g. `27`)
+- `x.x.x` : Nextcloud x.x.x (e.g. `27.0.0`)
 
 You can always have a glance [here](https://github.com/users/suprovsky/packages/container/package/nextcloud).
 Only the **latest stable version** will be maintained by myself.
@@ -73,8 +73,8 @@ Only the **latest stable version** will be maintained by myself.
 | **NGINX_VERSION**           | version of nginx                       |          *         |
 | **HARDENED_MALLOC_VERSION** | version of hardened_malloc             |          *         |
 | **SNUFFLEUPAGUS_VERSION**   | version of Snuffleupagus (php ext)     |          *         |
-| **SHA256_SUM**              | checksum of Nextcloud tarball (sha256) |           *        |
-| **GPG_FINGERPRINT**         | fingerprint of Nextcloud GPG key       |           *        |
+| **SHA256_SUM**              | checksum of Nextcloud tarball (sha256) |          *         |
+| **GPG_FINGERPRINT**         | fingerprint of Nextcloud GPG key       |          *         |
 | **UID**                     | user id                                |        1000        |
 | **GID**                     | group id                               |        1000        |
 | **CONFIG_NATIVE**           | native code for hardened_malloc        |        false       |
@@ -155,4 +155,102 @@ You should edit your `docker-compose.yml` and `config.php` accordingly.
 
 ## Usage
 
-*To do.*
+Example `docker-compose.yml`:
+
+```docker
+version: '3.9'
+
+services:
+  nextcloud:
+    networks:
+      - nextcloud-net
+    container_name: 'nextcloud'
+    depends_on:
+      - nextcloud-db
+    image: ghcr.io/suprovsky/nextcloud:latest
+    restart: always
+    ports:
+      - '8888:8888'
+    volumes:
+      - 'nextcloud-themes:/nextcloud/themes'
+      - 'nextcloud-apps:/nextcloud/apps2'
+      - 'nextcloud-config:/nextcloud/config'
+      - 'nextcloud-data:/data'
+      - './logs:/logs'
+    environment:
+      - UPLOAD_MAX_SIZE=${UPLOAD_MAX_SIZE}
+      - APC_SHM_SIZE=${APC_SHM_SIZE}
+      - MEMORY_LIMIT=${MEMORY_LIMIT}
+      - CRON_PERIOD=${CRON_PERIOD}
+      - CRON_MEMORY_LIMIT={CRON_MEMORY_LIMIT}
+      - DB_NAME=${DB_NAME}
+      - DB_TYPE=${DB_TYPE}
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DOMAIN=${DOMAIN}
+      - PHP_HARDENING=${PHP_HARDENING}
+    env_file: './.env'
+
+  nextcloud-db:
+    networks:
+      - nextcloud-net
+    container_name: 'nextcloud-db'
+    image: rapidfort/mariadb:latest
+    restart: always
+    volumes:
+      - 'nextcloud-db:/bitnami/mariadb'
+      - './custom.cnf:/opt/bitnami/mariadb/conf/my_custom.cnf:ro'
+    environment:
+      - MARIADB_DATABASE=${DB_NAME}
+      - MARIADB_PASSWORD=${DB_PASSWORD}
+      - MARIADB_ROOT_PASSWORD=${MARIADB_ROOT_PASSWORD}
+      - MARIADB_USER=${DB_USER}
+    env_file: './.env'
+  redis:
+    container_name: nextcloud-redis
+    image: rapidfort/redis:7.0
+    restart: always
+    environment:
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
+    env_file:
+      - ./.env
+    networks:
+      - nextcloud-net
+    volumes:
+      - nextcloud-redis:/bitnami/redis/data:rw
+      - /etc/localtime:/etc/localtime:ro
+      - ./redis.conf:/opt/bitnami/redis/etc/redis.conf
+
+
+volumes:
+  nextcloud-themes:
+  nextcloud-apps:
+  nextcloud-config:
+  nextcloud-data:
+  nextcloud-db:
+  nextcloud-redis:
+networks:
+  nextcloud-net:
+    name: nextcloud-net
+```
+
+Example `.env` file:
+
+```env
+ADMIN_USER=supersecretadminuser
+ADMIN_PASSWORD=DXDXDXDXDXDXDXDXDXDXDXDXDXDXDXDXD
+DB_TYPE=mysql
+DB_NAME=nextcloud
+DB_USER=nextclouduser
+DB_PASSWORD=DXDXDXDXDXDXDXDXDXDXDXDXDXDXDXDXD
+DB_HOST=nextcloud-db
+UPLOAD_MAX_SIZE=50G
+APC_SHM_SIZE=2G
+MEMORY_LIMIT=2G
+CRON_PERIOD=5m
+CRON_MEMORY_LIMIT=1G
+DOMAIN=nextcloud.example.com
+MARIADB_ROOT_PASSWORD=DXDXDXDXDXDXDXDXDXDXDXDXDXDXDXDXD
+PHP_HARDENING=true
+REDIS_PASSWORD=XDXDXDXDXDXDXDXDXDXDXDXDXDXDXDXD
+```
