@@ -166,7 +166,8 @@ services:
       - nextcloud-net
     container_name: 'nextcloud'
     depends_on:
-      - nextcloud-db
+      - db
+      - redis
     image: ghcr.io/suprovsky/nextcloud:latest
     restart: always
     ports:
@@ -191,7 +192,7 @@ services:
       - PHP_HARDENING=${PHP_HARDENING}
     env_file: './.env'
 
-  nextcloud-db:
+  db:
     networks:
       - nextcloud-net
     container_name: 'nextcloud-db'
