@@ -1,5 +1,5 @@
 # -------------- Build-time variables --------------
-ARG NEXTCLOUD_VERSION=27.1.1
+ARG NEXTCLOUD_VERSION=27.1.2
 ARG PHP_VERSION=8.2
 ARG NGINX_VERSION=1.25
 
@@ -10,8 +10,8 @@ ARG SNUFFLEUPAGUS_VERSION=0.9.0
 ARG UID=1000
 ARG GID=1000
 
-# nextcloud-27.1.1.tar.bz2
-ARG SHA256_SUM="3a91500566874675676fa3b5bfae2587a839cde41dfac5318043b162c1311fab"
+# nextcloud-27.1.2.tar.bz2
+ARG SHA256_SUM="0742b247aaee0b7044db0062f0a914aa77338c7a7d8fe7da0917147d76689721"
 
 # Nextcloud Security <security@nextcloud.com> (D75899B9A724937A)
 ARG GPG_FINGERPRINT="2880 6A87 8AE4 23A2 8372  792E D758 99B9 A724 937A"
@@ -157,7 +157,7 @@ VOLUME /data /nextcloud/config /nextcloud/apps2 /nextcloud/themes
 
 EXPOSE 8888
 
-LABEL org.opencontainers.image.description="All-in-one Nextcloud image, based on Alpine Linux, based on wonderfall/nextcloud" \
+LABEL org.opencontainers.image.description="All-in-one Nextcloud image, based on Alpine Linux and on wonderfall/nextcloud image" \
       org.opencontainers.image.version="${NEXTCLOUD_VERSION}" \
       org.opencontainers.image.authors="Radosław Serba <radoslaw@serba.ovh>" \
       org.opencontainers.image.source="https://github.com/suprovsky/docker-nextcloud"
