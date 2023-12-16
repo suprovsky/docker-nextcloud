@@ -67,6 +67,7 @@ RUN apk -U upgrade \
         pdo_pgsql \
         zip \
         gmp \
+        bz2 \
  && pecl install APCu \
  && pecl install redis \
  && chmod +x /usr/local/bin/install-php-extensions \
