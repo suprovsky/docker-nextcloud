@@ -224,6 +224,11 @@ services:
       - nextcloud-redis:/bitnami/redis/data:rw
       - /etc/localtime:/etc/localtime:ro
       - ./redis.conf:/opt/bitnami/redis/etc/redis.conf
+    healthcheck:
+      test: redis-cli ping | grep PONG
+      interval: 10s
+      timeout: 2s
+      retries: 10
 
 volumes:
   nextcloud-themes:
