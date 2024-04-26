@@ -55,8 +55,8 @@ Verifying the signature isn't a requirement, and might not be as seamless as usi
 ## Tags
 
 - `latest` : latest Nextcloud version
-- `x` : latest Nextcloud x.x (e.g. `28`)
-- `x.x.x` : Nextcloud x.x.x (e.g. `28.0.0`)
+- `x` : latest Nextcloud x.x (e.g. `29`)
+- `x.x.x` : Nextcloud x.x.x (e.g. `29.0.0`)
 
 You can always have a glance [here](https://github.com/users/suprovsky/packages/container/package/nextcloud).
 Only the **latest stable version** will be maintained by myself.
@@ -158,16 +158,13 @@ You should edit your `docker-compose.yml` and `config.php` accordingly.
 Example `docker-compose.yml`:
 
 ```docker
-version: '3.9'
-
 services:
   nextcloud:
-    networks:
-      - nextcloud-net
-    container_name: 'nextcloud'
     depends_on:
-      - db
-      - redis
+      nextcloud-db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
     image: ghcr.io/suprovsky/nextcloud:latest
     restart: always
     ports:
@@ -191,12 +188,14 @@ services:
       - DOMAIN=${DOMAIN}
       - PHP_HARDENING=${PHP_HARDENING}
     env_file: './.env'
-
+    healthcheck:
+      test: curl -sSf 'http://localhost:8888/status.php' | grep '"installed":true' | grep '"maintenance":false' | grep '"needsDbUpgrade":false' || exit 1
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      #command: sleep infinity
   db:
-    networks:
-      - nextcloud-net
-    container_name: 'nextcloud-db'
-    image: rapidfort/mariadb:latest
+    image: rapidfort/mariadb:10.11.7
     restart: always
     volumes:
       - 'nextcloud-db:/bitnami/mariadb'
@@ -207,12 +206,16 @@ services:
       - MARIADB_ROOT_PASSWORD=${MARIADB_ROOT_PASSWORD}
       - MARIADB_USER=${DB_USER}
     env_file: './.env'
+    healthcheck:
+      test: ['CMD', '/opt/bitnami/scripts/mariadb/healthcheck.sh']
+      interval: 15s
+      timeout: 5s
+      retries: 6
   redis:
-    container_name: nextcloud-redis
-    image: rapidfort/redis:7.0
+    image: rapidfort/redis:7.2
     restart: always
     environment:
-      - REDIS_PASSWORD=${REDIS_PASSWORD}
+      - REDISCLI_AUTH=${REDIS_PASSWORD}
     env_file:
       - ./.env
     networks:
@@ -222,7 +225,6 @@ services:
       - /etc/localtime:/etc/localtime:ro
       - ./redis.conf:/opt/bitnami/redis/etc/redis.conf
 
-
 volumes:
   nextcloud-themes:
   nextcloud-apps:
@@ -230,9 +232,6 @@ volumes:
   nextcloud-data:
   nextcloud-db:
   nextcloud-redis:
-networks:
-  nextcloud-net:
-    name: nextcloud-net
 ```
 
 Example `.env` file:
