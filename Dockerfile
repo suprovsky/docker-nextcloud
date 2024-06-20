@@ -3,7 +3,8 @@ ARG NEXTCLOUD_VERSION=29.0.2
 ARG PHP_VERSION=8.3
 ARG NGINX_VERSION=1.26
 
-ARG ALPINE_VERSION=3.19
+ARG ALPINE_VERSION=3.20
+ARG ALPINE_VERSION_NGINX=3.19
 ARG HARDENED_MALLOC_VERSION=11
 ARG SNUFFLEUPAGUS_VERSION=0.10.0
 
@@ -96,7 +97,7 @@ RUN apk --no-cache add build-base git gnupg && cd /tmp \
 
 
 ### Fetch nginx
-FROM nginx:${NGINX_VERSION}-alpine${ALPINE_VERSION} as nginx
+FROM nginx:${NGINX_VERSION}-alpine${ALPINE_VERSION_NGINX} as nginx
 
 
 ### Build Nextcloud (production environemnt)
