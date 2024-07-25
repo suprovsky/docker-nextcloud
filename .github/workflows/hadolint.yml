@@ -1,0 +1,12 @@
+name: Hadolint Dockerfile check
+on: push
+jobs:
+  hadolint:
+    runs-on: "ubuntu-24.04"
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run Hadolint Dockerfile check
+        uses: hadolint/hadolint-action@v3.1.0
+        with:
+          dockerfile: Dockerfile
+          no-fail: true
