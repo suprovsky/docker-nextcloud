@@ -56,7 +56,7 @@ Verifying the signature isn't a requirement, and might not be as seamless as usi
 
 - `latest` : latest Nextcloud version
 - `x` : latest Nextcloud x.x (e.g. `29`)
-- `x.x.x` : Nextcloud x.x.x (e.g. `29.0.0`)
+- `x.x.x` : Nextcloud x.x.x (e.g. `29.0.6`)
 
 You can always have a glance [here](https://github.com/users/suprovsky/packages/container/package/nextcloud).
 Only the **latest stable version** will be maintained by myself.
