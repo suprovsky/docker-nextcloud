@@ -195,7 +195,7 @@ services:
       retries: 10
       #command: sleep infinity
   db:
-    image: rapidfort/mariadb:10.11.7
+    image: bitnami/mariadb:10.11
     restart: always
     volumes:
       - 'nextcloud-db:/bitnami/mariadb'
@@ -212,7 +212,7 @@ services:
       timeout: 5s
       retries: 6
   redis:
-    image: rapidfort/redis:7.2
+    image: bitnami/redis:7.2
     restart: always
     environment:
       - REDISCLI_AUTH=${REDIS_PASSWORD}
