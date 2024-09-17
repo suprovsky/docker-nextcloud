@@ -1,5 +1,9 @@
 name: Hadolint Dockerfile check
-on: push
+on:
+  push:
+    paths-ignore:
+      - '**.md'
+    
 jobs:
   hadolint:
     runs-on: "ubuntu-24.04"
