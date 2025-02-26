@@ -1,6 +1,6 @@
 # -------------- Build-time variables --------------
 ARG NEXTCLOUD_VERSION=31.0.0
-ARG PHP_VERSION=8.3
+ARG PHP_VERSION=8.4
 ARG NGINX_VERSION=1.27
 
 ARG ALPINE_VERSION=3.21
@@ -72,7 +72,7 @@ RUN apk -U upgrade \
  && pecl install APCu \
  && pecl install redis \
  && chmod +x /usr/local/bin/install-php-extensions \
- && install-php-extensions sysvsem imagick/imagick@master \
+ && install-php-extensions sysvsem imagick \
  && docker-php-ext-enable imagick \
  && echo "extension=redis.so" > /usr/local/etc/php/conf.d/redis.ini \
  && cd /tmp && git clone --depth 1 --branch v${SNUFFLEUPAGUS_VERSION} https://github.com/jvoisin/snuffleupagus \
