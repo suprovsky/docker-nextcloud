@@ -58,7 +58,7 @@ Verifying the signature isn't a requirement, and might not be as seamless as usi
 - `x` : latest Nextcloud x.x (e.g. `31`)
 - `x.x.x` : Nextcloud x.x.x (e.g. `31.0.9`)
 
-You can always have a glance [here](https://github.com/users/suprovsky/packages/container/package/nextcloud).
+You can always have a glance [here at the details](https://github.com/users/suprovsky/packages/container/package/nextcloud).
 Only the **latest stable version** will be maintained by myself.
 
 *Note: automated builds only target `linux/amd64` (x86_64). There is no technical reason preventing the image to be built for `arm64` (in fact you can build it yourself), but GitHub Actions runners are limited in memory, and this limit makes it currently impossible to target both platforms.*
