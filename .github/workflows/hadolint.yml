@@ -8,7 +8,7 @@ jobs:
   hadolint:
     runs-on: "ubuntu-24.04"
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
       - name: Run Hadolint Dockerfile check
         uses: hadolint/hadolint-action@v3.3.0
         with:
