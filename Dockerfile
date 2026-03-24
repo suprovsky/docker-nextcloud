@@ -56,6 +56,7 @@ RUN apk -U upgrade \
         imagemagick \
  && docker-php-ext-configure gd --with-freetype --with-jpeg --with-webp \
  && docker-php-ext-configure ldap \
+ && docker-php-ext-enable opcache || true \
  && docker-php-ext-install -j "$(nproc)" \
         bcmath \
         exif \
