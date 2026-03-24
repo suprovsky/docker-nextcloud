@@ -3,10 +3,10 @@ ARG NEXTCLOUD_VERSION=33.0.0
 ARG PHP_VERSION=8.4
 ARG NGINX_VERSION=1.29
 
-ARG ALPINE_VERSION=3.22
-ARG ALPINE_VERSION_NGINX=3.22
-ARG HARDENED_MALLOC_VERSION=11
-ARG SNUFFLEUPAGUS_VERSION=0.12.0
+ARG ALPINE_VERSION=3.23
+ARG ALPINE_VERSION_NGINX=3.23
+ARG HARDENED_MALLOC_VERSION=14
+ARG SNUFFLEUPAGUS_VERSION=0.13.0
 
 ARG UID=1000
 ARG GID=1000
@@ -89,12 +89,12 @@ ARG HARDENED_MALLOC_VERSION
 ARG CONFIG_NATIVE=false
 ARG VARIANT=light
 
-RUN apk --no-cache add build-base git gnupg && cd /tmp \
- && wget -q https://github.com/thestinger.gpg && gpg --import thestinger.gpg \
- && git clone --depth 1 --branch ${HARDENED_MALLOC_VERSION} https://github.com/GrapheneOS/hardened_malloc \
- && cd hardened_malloc && git verify-tag $(git describe --tags) \
+RUN apk --no-cache add build-base git openssh && cd /tmp \
+ && wget -q -O - https://github.com/thestinger.keys | while read -r key; do echo "thestinger@github.com $key"; done > allowed_signers \
+ && git config --global gpg.ssh.allowedSignersFile /tmp/allowed_signers && git init hardened_malloc && cd hardened_malloc \
+ && git fetch --depth 1 https://github.com/GrapheneOS/hardened_malloc tag ${HARDENED_MALLOC_VERSION} \
+ && git checkout FETCH_HEAD && git verify-tag $(git describe --tags) \
  && make CONFIG_NATIVE=${CONFIG_NATIVE} VARIANT=${VARIANT}
-
 
 ### Fetch nginx
 FROM nginx:${NGINX_VERSION}-alpine${ALPINE_VERSION_NGINX} AS nginx
