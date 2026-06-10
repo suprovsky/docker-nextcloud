@@ -6,9 +6,9 @@ As of now, only the latest stable version is supported.
 
 | Version | Supported          |
 | ------- | ------------------ |
-| 33. x   | :white_check_mark: |
+| 34. x   | :white_check_mark: |
+| 33. x   | :x:                |
 | 32. x   | :x:                |
-| 31. x   | :x:                |
 
 Please update to the latest version available. Major migrations are always tested before being pushed.
 

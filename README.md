@@ -55,8 +55,8 @@ Verifying the signature isn't a requirement, and might not be as seamless as usi
 ## Tags
 
 - `latest` : latest Nextcloud version
-- `x` : latest Nextcloud x.x (e.g. `33`)
-- `x.x.x` : Nextcloud x.x.x (e.g. `33.0.1`)
+- `x` : latest Nextcloud x.x (e.g. `34`)
+- `x.x.x` : Nextcloud x.x.x (e.g. `34.0.1`)
 
 You can always have a glance [here at the details](https://github.com/users/suprovsky/packages/container/package/nextcloud).
 Only the **latest stable version** will be maintained by myself.
@@ -195,7 +195,7 @@ services:
       retries: 10
       #command: sleep infinity
   db:
-    image: bitnami/mariadb:10.11
+    image: bitnami/mariadb:11.8
     restart: always
     volumes:
       - 'nextcloud-db:/bitnami/mariadb'
@@ -212,7 +212,7 @@ services:
       timeout: 5s
       retries: 6
   redis:
-    image: bitnami/redis:7.4
+    image: bitnami/redis:8.2
     restart: always
     environment:
       - REDISCLI_AUTH=${REDIS_PASSWORD}
